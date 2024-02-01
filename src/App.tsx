@@ -23,7 +23,7 @@ function App() {
 
   useEffect(() => {
     setEntryID(19517)
-    console.log('version 0.2')
+    console.log('version 0.3')
   })
 
   useEffect(() => {
@@ -86,43 +86,51 @@ function App() {
 
   return (
     <>
-      <div className="card" style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', background: 'none', border: 'none' }}>
-        <h1>{title}</h1>
-        <h3 style={{ textAlign: 'left', fontSize: '18px' }}>{reason}</h3>
-
-        <div style={{ display: 'flex', alignItems: "center", gap: "10px" }}>
-          <h4 style={{ margin: '0' }}>Serves</h4>
-          <input value={`${servingsInput}`} onChange={handleServingsChange}></input>
-          <h4>multiplier: {multiplier.toFixed(2)}</h4>
+      <div className="card" style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', background: 'none', border: 'none', gap: '30px' }}>
+        <div>
+          <h1>{title}</h1>
+          <h3 style={{ textAlign: 'left', fontSize: '18px' }}>{reason}</h3>
         </div>
 
-        <h5 style={{ fontWeight: 'normal', textAlign: 'left', fontSize: '14px' }}>
-          Tip: Input your the number of servings you'd like to cook for, and watch the recipe automatically change!
-        </h5>
+        <div>
+          <div style={{ display: 'flex', alignItems: "center", gap: "10px" }}>
+            <div>
+              <h4 style={{ margin: '0' }}>Serves</h4>
+              <input value={`${servingsInput}`} onChange={handleServingsChange}></input>
+            </div>
+            {/* <h4 style={{ margin: '0' }}>multiplier: {multiplier.toFixed(2)}</h4> */}
+          </div>
+          <h5 style={{ fontWeight: 'normal', textAlign: 'left', fontSize: '14px', margin: '0' }}>
+            Tip: Input your the number of servings you'd like to cook for, and watch the recipe automatically change!
+          </h5>
+        </div>
 
         <div style={{ display: 'flex', alignItems: "center", gap: "24px", fontWeight: 'bold', border: '1px solid rgb(63, 63, 63)', borderRadius: '12px', padding: '12px' }}>
           <p style={{ margin: '0' }}>Prep Time: {prepTime} min.</p>
           <p style={{ margin: '0' }}>Cook Time: {cookTime} min.</p>
         </div>
 
-        <h2>Ingredients</h2>
-        {ingredients ? ingredients.map((ingredient, index) => (
-          <div key={index} style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
-            <p>
-              {ingredient["quantity"] ? parseFloat(((validateNumber(`${ingredient["quantity"]}`) * multiplier).toFixed(2)).toString()) : '0'}
-              &nbsp;
-              {ingredient["unit"] ? ingredient["unit"] : ''}
-            </p>
-            <p style={{ fontWeight: 'bold' }}>{ingredient['ingredient']}</p>
-          </div>
-        )) : ''}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
+          <h2>Ingredients</h2>
+          {ingredients ? ingredients.map((ingredient, index) => (
+            <div key={index} style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
+              <p>
+                {ingredient["quantity"] ? parseFloat(((validateNumber(`${ingredient["quantity"]}`) * multiplier).toFixed(2)).toString()) : '0'}
+                &nbsp;
+                {ingredient["unit"] ? ingredient["unit"] : ''}
+              </p>
+              <p style={{ fontWeight: 'bold' }}>{ingredient['ingredient']}</p>
+            </div>
+          )) : ''}
+        </div>
 
-        <h2>Directions</h2>
-        <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <h2>Directions</h2>
           {directions ? directions.map((direction, index) => (
-            <div key={index} style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '15px'}}>
-              <h4 style={{ fontWeight: ' 900', color: '#30553a', fontSize: '30px', margin: '0', /* width: '30px', textAlign:'right' */}}>{index}</h4>
-              <p style={{margin: '0'}}>{direction}</p>
+            <div key={index} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '15px' }}>
+              <h2 style={{ fontWeight: ' 900', color: '#30553a', fontSize: '30px', margin: '0', /* width: '30px', textAlign:'right' */ }}>{index}</h2>
+              <p style={{ margin: '0' }}>{direction}</p>
             </div>
           )) : ''}
         </div>
@@ -130,7 +138,7 @@ function App() {
         {/* {photos ? photos.map((src, index) => {
           <img key={index} src={src} alt="" />
         }) : ''} */}
-        {photos ? <img src={photos[0]} alt="" style={{ maxHeight:'450px', maxWidth:'650px', width: '100%', objectFit: 'cover' }} /> : ''}
+        {photos ? <img src={photos[0]} alt="" style={{ maxHeight: '450px', maxWidth: '650px', width: '100%', objectFit: 'cover' }} /> : ''}
       </div>
     </>
   )
