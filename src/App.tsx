@@ -86,18 +86,18 @@ function App() {
 
   return (
     <>
-      <div className="card" style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+      <div className="card" style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', background: 'none' }}>
         <h1>{title}</h1>
-        <h3 style={{ textAlign: 'left' }}>{reason}</h3>
+        <h3 style={{ textAlign: 'left', fontSize: '18px' }}>{reason}</h3>
         <div style={{ display: 'flex', alignItems: "center", gap: "10px" }}>
-          <h3>Serves</h3>
+          <h4>Serves</h4>
           <input value={`${servingsInput}`} onChange={handleServingsChange}></input>
           <h4>multiplier: {multiplier.toFixed(2)}</h4>
         </div>
-        <h5 style={{ fontWeight: 'normal', textAlign: 'left' }}>
+        <h5 style={{ fontWeight: 'normal', textAlign: 'left', fontSize: '14px' }}>
           Tip: Input your the number of servings you'd like to cook for, and watch the recipe automatically change!
         </h5>
-        <div style={{ display: 'flex', alignItems: "center", gap: "24px", fontWeight: 'bold', border: '1px solid white', borderRadius: '12px', padding: '12px' }}>
+        <div style={{ display: 'flex', alignItems: "center", gap: "24px", fontWeight: 'bold', border: '1px solid rgb(63, 63, 63)', borderRadius: '12px', padding: '12px' }}>
           <p style={{ margin: '0' }}>Prep Time: {prepTime} min.</p>
           <p style={{ margin: '0' }}>Cook Time: {cookTime} min.</p>
         </div>
