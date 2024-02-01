@@ -17,7 +17,7 @@ function App() {
   const [prepTime, setPrepTime] = useState<number>(0)
   const [cookTime, setCookTime] = useState<string>('')
   const [ingredients, setIngredients] = useState<Ingredient[]>()
-  const [directions, setDirections] = useState<string>('')
+  const [directions, setDirections] = useState<string[]>()
   const [photos, setPhotos] = useState<string[]>()
   const [multiplier, setMultiplier] = useState<number>(1)
 
@@ -27,7 +27,7 @@ function App() {
 
   useEffect(() => {
     console.log('version 0.1')
-    
+
     try {
       fetch('https://script.google.com/macros/s/AKfycbzEOc3b1une7RNqBHA1VXFuRKiWt3SUnmJ6-UsusElFm50PbSIGlsTkNxt06QJaGI6L/exec')
         .then(response => {
@@ -49,7 +49,7 @@ function App() {
           setPhotos((response["Photos"]).split(','))
 
           //setDescription(response["Description"])
-          setDirections(response["Directions"])
+          setDirections(JSON.parse(response["Directions"]))
           setServings(parseInt(response["Servings"]))
           setServingsInput(parseInt(response["Servings"]))
           setPrepTime(response["Prep time"])
@@ -87,11 +87,11 @@ function App() {
 
   return (
     <>
-      <div className="card" style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', background: 'none' }}>
+      <div className="card" style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', background: 'none', border: 'none' }}>
         <h1>{title}</h1>
         <h3 style={{ textAlign: 'left', fontSize: '18px' }}>{reason}</h3>
         <div style={{ display: 'flex', alignItems: "center", gap: "10px" }}>
-          <h4>Serves</h4>
+          <h4 style={{ margin: '0' }}>Serves</h4>
           <input value={`${servingsInput}`} onChange={handleServingsChange}></input>
           <h4>multiplier: {multiplier.toFixed(2)}</h4>
         </div>
@@ -114,11 +114,19 @@ function App() {
           </div>
         )) : ''}
         <h2>Directions</h2>
-        <p>{directions}</p>
+        <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+          {directions ? directions.map((direction, index) => (
+            <div key={index} style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '15px'}}>
+              <h3 style={{ fontWeight: ' 900', color: '#30553a', fontSize: '30px', margin: '0', /* width: '30px', textAlign:'right' */}}>{index}</h3>
+              <p style={{margin: '0'}}>{direction}</p>
+            </div>
+          )) : ''}
+        </div>
+
         {/* {photos ? photos.map((src, index) => {
           <img key={index} src={src} alt="" />
         }) : ''} */}
-        {photos ? <img src={photos[0]} alt="" style={{width: '100%', objectFit: 'contain'}}/> : ''}
+        {photos ? <img src={photos[0]} alt="" style={{ maxHeight:'450px', maxWidth:'650px', width: '100%', objectFit: 'cover' }} /> : ''}
       </div>
     </>
   )
