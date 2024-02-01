@@ -8,7 +8,7 @@ type Ingredient = {
 }
 
 function App() {
-  const [entryID, setEntryID] = useState<number>(19517)
+  const [entryID, setEntryID] = useState<number>()
   const [title, setTitle] = useState<string>('')
   const [reason, setReason] = useState<string>('')
   //const [description, setDescription] = useState<string>('')
@@ -22,54 +22,59 @@ function App() {
   const [multiplier, setMultiplier] = useState<number>(1)
 
   useEffect(() => {
-    setEntryID(19517)
+    let scriptTag = document.getElementById("injector");
+    let id = scriptTag?.getAttribute("entryid");
+    setEntryID(id ? parseInt(id) : 20412) // 20412 19517
     console.log('version 0.3')
   })
 
   useEffect(() => {
-    try {
-      fetch('https://script.google.com/macros/s/AKfycbzEOc3b1une7RNqBHA1VXFuRKiWt3SUnmJ6-UsusElFm50PbSIGlsTkNxt06QJaGI6L/exec')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Network response was not ok: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(response => {
-          // Process the JSON data here
-          console.log(response)
-          response = response.data[`${entryID}`]
-          //setResponse(response)
-          setTitle(response["Dish Title"])
-
-          setReason(response["What makes your recipe special to you?"])
-          setPrepTime(response["Prep time"])
-          setCookTime(response["Cook Time"])
-          setPhotos((response["Photos"]).split(','))
-
-          //setDescription(response["Description"])
-          setDirections(JSON.parse(response["Directions"]))
-          setServings(parseInt(response["Servings"]))
-          setServingsInput(parseInt(response["Servings"]))
-          setPrepTime(response["Prep time"])
-          const parsedIngredients: Ingredient[] = JSON.parse(response["Ingredients"]).map((rawIngredient: any) => {
-            return {
-              ingredient: rawIngredient.Ingredient,
-              quantity: rawIngredient.Quantity,
-              unit: rawIngredient.Unit
+    console.log(entryID)
+    if (entryID) {
+      try {
+        fetch('https://script.google.com/macros/s/AKfycbzEOc3b1une7RNqBHA1VXFuRKiWt3SUnmJ6-UsusElFm50PbSIGlsTkNxt06QJaGI6L/exec')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`Network response was not ok: ${response.status}`);
             }
-          });
-          setIngredients(parsedIngredients)
-        })
+            return response.json();
+          })
+          .then(response => {
+            // Process the JSON data here
+            console.log(response)
+            response = response.data[`${entryID}`]
+            //setResponse(response)
+            setTitle(response["Dish Title"])
 
-        .catch(error => {
-          // Handle errors here
-          console.error('Fetch error:', error);
-        });
-    } catch (error) {
-      console.error('Fetch error:', error);
+            setReason(response["What makes your recipe special to you?"])
+            setPrepTime(response["Prep time"])
+            setCookTime(response["Cook Time"])
+            setPhotos((response["Photos"]).split(','))
+
+            //setDescription(response["Description"])
+            setDirections(JSON.parse(response["Directions"]))
+            setServings(parseInt(response["Servings"]))
+            setServingsInput(parseInt(response["Servings"]))
+            setPrepTime(response["Prep time"])
+            const parsedIngredients: Ingredient[] = JSON.parse(response["Ingredients"]).map((rawIngredient: any) => {
+              return {
+                ingredient: rawIngredient.Ingredient,
+                quantity: rawIngredient.Quantity,
+                unit: rawIngredient.Unit
+              }
+            });
+            setIngredients(parsedIngredients)
+          })
+
+          .catch(error => {
+            // Handle errors here
+            console.error('Fetch error:', error);
+          });
+      } catch (error) {
+        console.error('Fetch error:', error);
+      }
     }
-  }, [])
+  }, [entryID])
 
   useEffect(() => {
     console.log(ingredients as Ingredient[], ingredients ? typeof ingredients[0] : '')
@@ -88,16 +93,16 @@ function App() {
     <>
       <div className="card" style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', background: 'none', border: 'none', gap: '30px' }}>
         <div>
-          <h1>{title}</h1>
+          <h1 style={{ textAlign: 'left' }}>{title}</h1>
           <h3 style={{ textAlign: 'left', fontSize: '18px' }}>{reason}</h3>
         </div>
 
         <div>
           <div style={{ display: 'flex', alignItems: "center", gap: "10px" }}>
-            <div>
-              <h4 style={{ margin: '0' }}>Serves</h4>
-              <input value={`${servingsInput}`} onChange={handleServingsChange}></input>
-            </div>
+
+            <h4 style={{ margin: '0' }}>Serves</h4>
+            <input value={`${servingsInput}`} onChange={handleServingsChange}></input>
+
             {/* <h4 style={{ margin: '0' }}>multiplier: {multiplier.toFixed(2)}</h4> */}
           </div>
           <h5 style={{ fontWeight: 'normal', textAlign: 'left', fontSize: '14px', margin: '0' }}>
@@ -110,7 +115,7 @@ function App() {
           <p style={{ margin: '0' }}>Cook Time: {cookTime} min.</p>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <h2>Ingredients</h2>
           {ingredients ? ingredients.map((ingredient, index) => (
             <div key={index} style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
