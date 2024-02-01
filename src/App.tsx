@@ -26,6 +26,7 @@ function App() {
   })
 
   useEffect(() => {
+    console.log('version 0.1')
     
     try {
       fetch('https://script.google.com/macros/s/AKfycbzEOc3b1une7RNqBHA1VXFuRKiWt3SUnmJ6-UsusElFm50PbSIGlsTkNxt06QJaGI6L/exec')
