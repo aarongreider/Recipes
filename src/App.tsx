@@ -23,11 +23,10 @@ function App() {
 
   useEffect(() => {
     setEntryID(19517)
+    console.log('version 0.2')
   })
 
   useEffect(() => {
-    console.log('version 0.1')
-
     try {
       fetch('https://script.google.com/macros/s/AKfycbzEOc3b1une7RNqBHA1VXFuRKiWt3SUnmJ6-UsusElFm50PbSIGlsTkNxt06QJaGI6L/exec')
         .then(response => {
@@ -90,18 +89,22 @@ function App() {
       <div className="card" style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', background: 'none', border: 'none' }}>
         <h1>{title}</h1>
         <h3 style={{ textAlign: 'left', fontSize: '18px' }}>{reason}</h3>
+
         <div style={{ display: 'flex', alignItems: "center", gap: "10px" }}>
           <h4 style={{ margin: '0' }}>Serves</h4>
           <input value={`${servingsInput}`} onChange={handleServingsChange}></input>
           <h4>multiplier: {multiplier.toFixed(2)}</h4>
         </div>
+
         <h5 style={{ fontWeight: 'normal', textAlign: 'left', fontSize: '14px' }}>
           Tip: Input your the number of servings you'd like to cook for, and watch the recipe automatically change!
         </h5>
+
         <div style={{ display: 'flex', alignItems: "center", gap: "24px", fontWeight: 'bold', border: '1px solid rgb(63, 63, 63)', borderRadius: '12px', padding: '12px' }}>
           <p style={{ margin: '0' }}>Prep Time: {prepTime} min.</p>
           <p style={{ margin: '0' }}>Cook Time: {cookTime} min.</p>
         </div>
+
         <h2>Ingredients</h2>
         {ingredients ? ingredients.map((ingredient, index) => (
           <div key={index} style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
@@ -113,11 +116,12 @@ function App() {
             <p style={{ fontWeight: 'bold' }}>{ingredient['ingredient']}</p>
           </div>
         )) : ''}
+
         <h2>Directions</h2>
         <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
           {directions ? directions.map((direction, index) => (
             <div key={index} style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '15px'}}>
-              <h3 style={{ fontWeight: ' 900', color: '#30553a', fontSize: '30px', margin: '0', /* width: '30px', textAlign:'right' */}}>{index}</h3>
+              <h4 style={{ fontWeight: ' 900', color: '#30553a', fontSize: '30px', margin: '0', /* width: '30px', textAlign:'right' */}}>{index}</h4>
               <p style={{margin: '0'}}>{direction}</p>
             </div>
           )) : ''}
