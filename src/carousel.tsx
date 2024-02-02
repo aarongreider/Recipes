@@ -17,10 +17,10 @@ function Carousel({ images }: CarouselProps) {
     };
 
     return (
-        <div style={{ display:'flex',alignItems:'center', justifyContent:'flex-end', maxHeight: '450px', maxWidth: '650px',width:'82vw', position:'relative'}}>
+        <div style={{ display:'flex',alignItems:'center', justifyContent:'space-around', height:'50vh', maxHeight: '350px', width:'100%', position:'relative'}}>
             <button onClick={prevImage} style={{}}>{`<`}</button>
             
-            <img src={images[currentIndex]} alt={`Image ${currentIndex + 1}`} style={{ width: '80%', objectFit: 'contain' }}/>
+            <img src={images[currentIndex]} alt={`Image ${currentIndex + 1}`} style={{ height:'100%', objectFit: 'contain' }}/>
             <button onClick={nextImage} style={{}}>{`>`}</button>
             
         </div>

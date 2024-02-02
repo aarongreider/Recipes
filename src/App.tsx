@@ -94,6 +94,14 @@ function App() {
     setMultiplier(newMult)
   }
 
+  const [viewportWidth, setViewportWidth] = useState<number>(window.innerWidth);
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportWidth(window.innerWidth);
+    }
+    window.addEventListener('resize', handleResize);
+  }, [])
+
   return (
     dataLoaded ?
       <>
@@ -103,6 +111,7 @@ function App() {
               <h1 style={{ textAlign: 'left' }}>{title}</h1>
               <h3 style={{ textAlign: 'left', fontSize: '18px' }}>{reason}</h3>
             </div>
+            {photos && viewportWidth < 1250 ? <Carousel images={photos}></Carousel> : ''}
             <div>
               <div style={{ display: 'flex', alignItems: "center", gap: "10px" }}>
                 <h4 style={{ margin: '0' }}>Serves</h4>
@@ -140,11 +149,7 @@ function App() {
               )) : ''}
             </div>
           </div>
-          {/* {photos ? photos.map((src, index) => {
-            <img key={index} src={src} alt="" />
-          }) : ''} */}
-          {/* {photos ? <img src={photos[0]} alt="" style={{ maxHeight: '450px', maxWidth: '650px', width: '100%', objectFit: 'cover' }} /> : ''} */}
-          {photos ? <Carousel images={photos}></Carousel> : ''}
+          {photos && viewportWidth > 1250 ? <Carousel images={photos}></Carousel> : ''}
         </div>
       </> : <>
         <div style={{ width: '100%', alignItems: 'center' }}>
