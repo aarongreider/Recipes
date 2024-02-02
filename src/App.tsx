@@ -144,7 +144,7 @@ function App() {
                 {/* <h4 style={{ margin: '0' }}>multiplier: {multiplier.toFixed(2)}</h4> */}
               </div>
               <h5 style={{ fontWeight: 'normal', textAlign: 'left', fontSize: '14px', margin: '10px 0' }}>
-                Tip: Input your the number of servings you'd like to cook for, and watch the recipe automatically change!
+                Tip: Input the number of servings you'd like to cook for and watch the recipe automatically change!
               </h5>
             </div>
 
