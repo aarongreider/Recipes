@@ -21,11 +21,13 @@ function App() {
   const [photos, setPhotos] = useState<string[]>()
   const [multiplier, setMultiplier] = useState<number>(1)
 
+  const [dataLoaded, setDataLoaded] = useState<boolean>(false)
+
   useEffect(() => {
     let scriptTag = document.getElementById("injector");
     let id = scriptTag?.getAttribute("entryid");
     setEntryID(id ? parseInt(id) : 20412) // 20412 19517
-    console.log('version 0.3')
+    console.log('version 0.4')
   })
 
   useEffect(() => {
@@ -64,6 +66,8 @@ function App() {
               }
             });
             setIngredients(parsedIngredients)
+
+            setDataLoaded(true)
           })
 
           .catch(error => {
@@ -90,6 +94,7 @@ function App() {
   }
 
   return (
+    dataLoaded ? 
     <>
       <div className="card" style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', background: 'none', border: 'none', gap: '30px' }}>
         <div>
@@ -145,6 +150,10 @@ function App() {
         }) : ''} */}
         {photos ? <img src={photos[0]} alt="" style={{ maxHeight: '450px', maxWidth: '650px', width: '100%', objectFit: 'cover' }} /> : ''}
       </div>
+    </> : <>
+        <div style={{width:'100%', alignItems:'center'}}>
+          <img src='https://junglejims.com/wp-content/uploads/monkey.gif'></img>
+        </div>
     </>
   )
 }
