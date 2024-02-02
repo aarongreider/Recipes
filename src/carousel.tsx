@@ -21,7 +21,7 @@ function Carousel({ images }: CarouselProps) {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', height: '50vh', maxHeight: '350px', width: '100%', position: 'relative' }}>
             <button onClick={prevImage} style={buttonStyle}>{`<`}</button>
 
-            <img src={images[currentIndex]} alt={`Image ${currentIndex + 1}`} style={{ height: '100%', objectFit: 'contain', borderRadius:'12px' }} />
+            <img src={images[currentIndex]} alt={`Image ${currentIndex + 1}`} style={{ height: '100%',maxWidth:'calc(100% - 80px)', objectFit: 'contain', borderRadius:'12px' }} />
             <button onClick={nextImage} style={buttonStyle}>{`>`}</button>
 
         </div>

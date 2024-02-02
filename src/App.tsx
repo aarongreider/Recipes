@@ -123,7 +123,7 @@ function App() {
               <h1 style={{ textAlign: 'left' }}>{title}</h1>
               <h3 style={{ textAlign: 'left', fontSize: '18px' }}>{reason}</h3>
               <div style={{
-                width: 'max-content', margin:'16px 0', display: 'flex', alignItems: "center", gap: "24px", fontWeight: 'bold', border: '1px solid rgb(63, 63, 63)', borderRadius: '12px', padding: '12px',
+                width: 'max-content', margin:'16px 0', display: 'flex', alignItems: "center", gap: "24px", fontWeight: 'bold', borderRadius: '12px', padding: '12px',
                 background: 'linear-gradient(to bottom, #f3de54 0%, #e2b733 100%)', font: '900 16px / 1.20 Alegreya Sans, Arial, Helvetica, sans-serif',
                 color: '#30553a', boxShadow: ' 4px 4px 2px 0 rgba(77, 77, 77, .22)',
               }}>
