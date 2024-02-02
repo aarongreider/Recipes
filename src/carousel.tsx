@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { buttonStyle } from './App';
 
 
 interface CarouselProps {
@@ -7,17 +8,6 @@ interface CarouselProps {
 
 function Carousel({ images }: CarouselProps) {
     const [currentIndex, setCurrentIndex] = useState<number>(0);
-    let buttonStyle = {
-        verticalAlign: 'top',
-        font: '900 16px / 1.20 Alegreya Sans, Arial, Helvetica, sans-serif',
-        color: '#30553a',
-        borderRadius: '10px',
-        border: 'none',
-        boxShadow: ' 4px 4px 2px 0 rgba(77, 77, 77, .22)',
-        textDecoration: 'none',
-        background: 'linear-gradient(to bottom, #f3de54 0%, #e2b733 100%)',
-        padding: '10px 15px',
-    }
 
     const nextImage = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);

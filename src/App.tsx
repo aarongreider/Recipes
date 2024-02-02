@@ -8,6 +8,18 @@ type Ingredient = {
   unit: string
 }
 
+export let buttonStyle = {
+  verticalAlign: 'top',
+  font: '900 16px / 1.20 Alegreya Sans, Arial, Helvetica, sans-serif',
+  color: '#30553a',
+  borderRadius: '10px',
+  border: 'none',
+  boxShadow: ' 4px 4px 2px 0 rgba(77, 77, 77, .22)',
+  textDecoration: 'none',
+  background: 'linear-gradient(to bottom, #f3de54 0%, #e2b733 100%)',
+  padding: '10px 15px',
+}
+
 function App() {
   const [entryID, setEntryID] = useState<number>()
   const [title, setTitle] = useState<string>('')
@@ -105,11 +117,20 @@ function App() {
   return (
     dataLoaded ?
       <>
-        <div style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'row', background: 'none', border: 'none', gap: '30px' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'row', background: 'none', border: 'none', gap: '90px' }}>
           <div className="card" style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', background: 'none', border: 'none', gap: '30px' }}>
             <div>
               <h1 style={{ textAlign: 'left' }}>{title}</h1>
               <h3 style={{ textAlign: 'left', fontSize: '18px' }}>{reason}</h3>
+              <div style={{
+                width: 'max-content', margin:'16px 0', display: 'flex', alignItems: "center", gap: "24px", fontWeight: 'bold', border: '1px solid rgb(63, 63, 63)', borderRadius: '12px', padding: '12px',
+                background: 'linear-gradient(to bottom, #f3de54 0%, #e2b733 100%)', font: '900 16px / 1.20 Alegreya Sans, Arial, Helvetica, sans-serif',
+                color: '#30553a', boxShadow: ' 4px 4px 2px 0 rgba(77, 77, 77, .22)',
+              }}>
+                <p style={{ margin: '0' }}>Prep Time: {prepTime} min.</p>
+                <p style={{ margin: '0' }}>Cook Time: {cookTime} min.</p>
+              </div>
+
             </div>
             {photos && viewportWidth < 1250 ? <Carousel images={photos}></Carousel> : ''}
             <div>
@@ -122,10 +143,7 @@ function App() {
                 Tip: Input your the number of servings you'd like to cook for, and watch the recipe automatically change!
               </h5>
             </div>
-            <div style={{ display: 'flex', alignItems: "center", gap: "24px", fontWeight: 'bold', border: '1px solid rgb(63, 63, 63)', borderRadius: '12px', padding: '12px' }}>
-              <p style={{ margin: '0' }}>Prep Time: {prepTime} min.</p>
-              <p style={{ margin: '0' }}>Cook Time: {cookTime} min.</p>
-            </div>
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <h2>Ingredients</h2>
               {ingredients ? ingredients.map((ingredient, index) => (
