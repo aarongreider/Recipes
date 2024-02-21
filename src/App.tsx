@@ -42,7 +42,7 @@ function App() {
     let scriptTag = document.getElementById("injector");
     let id = scriptTag?.getAttribute("entryid");
     setEntryID(id ? parseInt(id) : 20412) // 20412 19517
-    console.log('version 0.6')
+    console.log('version 0.7')
   }, [])
 
   useEffect(() => {
@@ -156,16 +156,15 @@ function App() {
               {ingredients ? ingredients.map((ingredient, index) => (
                 <div key={index} style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
                   <p>
-                    {ingredient["quantity"] ?
-                      sanitizeFloat(unicodeToFloat(`${ingredient["quantity"]}`) * multiplier)
-                    /* sanitizeFloat(parseFloat(((unicodeToFloat(`${ingredient["quantity"]}`) * multiplier).toFixed(2)).toString())) */ : '0'}
+                    {getQuantity(ingredient["quantity"], multiplier)}
                     &nbsp;
-                    {ingredient["unit"] ? ingredient["unit"] : ''}
+                    {ingredient["unit"] ? ingredient["unit"] : undefined}
                   </p>
                   <p style={{ fontWeight: 'bold' }}>{ingredient['ingredient']}</p>
                 </div>
-              )) : ''}
+              )) : undefined}
             </div>
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <h2>Directions</h2>
               {directions ? directions.map((direction, index) => (
@@ -188,15 +187,34 @@ function App() {
 
 export default App;
 
-function unicodeToFloat(str: string): number {
-  // first check if the input is as a fraction that is not unicode, ie 1/2 as opposed to ½
-  if (str.indexOf("/") > -1) {
-    const operands: string[] = str.split("/");
-    let dec: number = parseFloat(operands[0])/parseFloat(operands[1])
-    // console.log(dec, " '/' detected, str is a non-unicode fraction")
-    return dec;
-  }
+function getQuantity(str: string, multiplier: number): any {
+  
+  /* 
+    str ? // does the quantity property exist?
+    isNaN(parseFloat(str)) ? // is it parsing as a float?
+      evaluateUnicodeFraction(str) == -1 ? // if it is -1, then it is full text
+        str // display full text
+        : sanitizeFloat(unicodeToFloat(`${str}`) * multiplier) // unicode fraction
+      : sanitizeFloat(unicodeToFloat(`${str}`) * multiplier) // else, this is a whole number combined with a fraction
+    : '0' 
+  */
 
+  if (str) {
+    if (isNaN(parseFloat(str))) {
+      if (evaluateUnicodeFraction(str) == -1) {
+          console.log(str)
+         return str;
+      }
+    }
+  } else {
+    console.log(0)
+    return '0';
+  }
+  //console.log(sanitizeFloat(unicodeToFloat(`${str}`) * multiplier))
+  return sanitizeFloat(unicodeToFloat(`${str}`) * multiplier)
+}
+
+function evaluateUnicodeFraction(str: string): number {
   // cycle through all character of string
   // if unicode fraction, convert to float and append to whole number
   let dec: number;
@@ -208,53 +226,53 @@ function unicodeToFloat(str: string): number {
     const normalized = char.normalize("NFKD");
     const operands: any = normalized.split("⁄"); // this is not a normal slash
     if (operands[0] / operands[1]) {
-      console.log(char, operands[0] + "/" + operands[1], operands[0] / operands[1]);
+      //console.log(char, operands[0] + "/" + operands[1], operands[0] / operands[1]);
       dec = operands[0] / operands[1];
       return num + dec;
     }
   }
-  return num;
+  return -1;
+}
+
+function unicodeToFloat(str: string): number {
+  // first check if the input is as a fraction that is not unicode, ie 1/2 as opposed to ½
+  if (str.indexOf("/") > -1) {
+    const operands: string[] = str.split("/");
+    let dec: number = parseFloat(operands[0]) / parseFloat(operands[1])
+    // console.log(dec, " '/' detected, str is a non-unicode fraction")
+    return dec;
+  }
+
+  // evaluate the string for its fraction-ness
+  let num: number = evaluateUnicodeFraction(str);
+  //console.log(num, str, "comparing num and string")
+
+  if (!num) num = 0;
+  let isUnicodeFraction = num > -1;
+
+  if (isUnicodeFraction) {
+    return num;
+  }
+
+
+  return parseFloat(str);
 }
 
 function sanitizeFloat(num: number) {
   // takes a float and returns a string that fits with jungle jim's recipe guidelines
-
-  const fractions = {
-    '0.50': '½',
-    '0.33': '⅓',
-    '0.67': '⅔',
-    '0.25': '¼',
-    '0.75': '¾',
-    '0.20': '⅕',
-    '0.40': '⅖',
-    '0.60': '⅗',
-    '0.80': '⅘',
-    '0.17': '⅙',
-    '0.83': '⅚',
-    '0.14': '⅐',
-    '0.13': '⅛',
-    '0.38': '⅜',
-    '0.63': '⅝',
-    '0.88': '⅞',
-    '0.11': '⅑',
-    '0.10': '⅒'
-  };
 
   let decimal: number = (num % 1);
   let int: number = num - decimal;
   //console.log(num, dec, "dec")
   //console.log(math.fraction(parseFloat(dec)), "evaluate fraction dec")
   let fraction = math.fraction(decimal);
-
-
-  /* if ((decimal).toFixed(2) in fractions) {
-    return fractions[(decimal).toFixed(2)];
-  } else if (decimal != 0) {
-    return <><sup style={{fontSize: '10px'}}>{`${fraction.n}`}</sup>/<sub style={{fontSize: '10px'}}>{`${fraction.d}`}</sub></>
-  } */
-
-  return <>
+  if (int != 0  || fraction.n != 0) {
+    return <>
     {int > 0 ? int : undefined}
     {fraction.n != 0 ? <><sup style={{ fontSize: '10px' }}> {`${fraction.n}`}</sup>/<sub style={{ fontSize: '10px' }}>{`${fraction.d}`}</sub></> : undefined}
   </>
+  } else {
+    return 0
+  }
+  
 }
