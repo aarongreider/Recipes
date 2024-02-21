@@ -115,6 +115,7 @@ function App() {
   }, [ingredients])
 
   const handleServingsChange = (event: any) => {
+    console.log(event.target.value)
     setServingsInput(event.target.value)
     let newMult = parseFloat(event.target.value) as number / servings;
     if (!newMult) {
