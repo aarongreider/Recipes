@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import * as math from 'mathjs';
 import './App.css'
 import Carousel from './carousel'
 
@@ -33,6 +34,7 @@ function App() {
   const [directions, setDirections] = useState<string[]>()
   const [photos, setPhotos] = useState<string[]>()
   const [multiplier, setMultiplier] = useState<number>(1)
+  const [name, setName] = useState<string>()
 
   const [dataLoaded, setDataLoaded] = useState<boolean>(false)
 
@@ -40,8 +42,8 @@ function App() {
     let scriptTag = document.getElementById("injector");
     let id = scriptTag?.getAttribute("entryid");
     setEntryID(id ? parseInt(id) : 20412) // 20412 19517
-    console.log('version 0.5')
-  })
+    console.log('version 0.6')
+  }, [])
 
   useEffect(() => {
     console.log(entryID)
@@ -70,6 +72,7 @@ function App() {
             setDirections(JSON.parse(response["Directions"]))
             setServings(parseInt(response["Servings"]))
             setServingsInput(parseInt(response["Servings"]))
+            setPrepTime(response["Prep time"])
             setPrepTime(response["Prep time"])
             const parsedIngredients: Ingredient[] = JSON.parse(response["Ingredients"]).map((rawIngredient: any) => {
               return {
@@ -121,7 +124,7 @@ function App() {
           <div className="card" style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', background: 'none', border: 'none', gap: '30px' }}>
             <div>
               <h5 style={{ fontWeight: 'normal', textAlign: 'left', fontSize: '14px', margin: '0 0 36px 0px' }}>
-                This is user submitted content that has been approved by our culinary staff. 
+                This is user submitted content that has been approved by our culinary staff.
                 To submit your own, navigate to our <a target='blank' href='https://junglejims.com/recipe-submission/'>recipe submission form!</a>
               </h5>
               <h1 style={{ textAlign: 'left' }}>{title}</h1>
@@ -153,7 +156,9 @@ function App() {
               {ingredients ? ingredients.map((ingredient, index) => (
                 <div key={index} style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
                   <p>
-                    {ingredient["quantity"] ? parseFloat(((validateNumber(`${ingredient["quantity"]}`) * multiplier).toFixed(2)).toString()) : '0'}
+                    {ingredient["quantity"] ?
+                      sanitizeFloat(unicodeToFloat(`${ingredient["quantity"]}`) * multiplier)
+                    /* sanitizeFloat(parseFloat(((unicodeToFloat(`${ingredient["quantity"]}`) * multiplier).toFixed(2)).toString())) */ : '0'}
                     &nbsp;
                     {ingredient["unit"] ? ingredient["unit"] : ''}
                   </p>
@@ -165,7 +170,7 @@ function App() {
               <h2>Directions</h2>
               {directions ? directions.map((direction, index) => (
                 <div key={index} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '15px' }}>
-                  <h2 style={{ fontWeight: ' 900', color: '#30553a', fontSize: '30px', margin: '0', /* width: '30px', textAlign:'right' */ }}>{index}</h2>
+                  <h2 style={{ fontWeight: ' 900', color: '#30553a', fontSize: '30px', margin: '0', /* width: '30px', textAlign:'right' */ }}>{index + 1}</h2>
                   <p style={{ margin: '0' }}>{direction}</p>
                 </div>
               )) : ''}
@@ -181,11 +186,19 @@ function App() {
   )
 }
 
-export default App
+export default App;
 
-function validateNumber(str: string): number {
+function unicodeToFloat(str: string): number {
+  // first check if the input is as a fraction that is not unicode, ie 1/2 as opposed to ½
+  if (str.indexOf("/") > -1) {
+    const operands: string[] = str.split("/");
+    let dec: number = parseFloat(operands[0])/parseFloat(operands[1])
+    // console.log(dec, " '/' detected, str is a non-unicode fraction")
+    return dec;
+  }
+
   // cycle through all character of string
-  // if unicode fraction, convert and append
+  // if unicode fraction, convert to float and append to whole number
   let dec: number;
   let num: number = parseFloat(str);
   if (!num) num = 0;
@@ -193,7 +206,7 @@ function validateNumber(str: string): number {
   for (const char of str) {
     //console.log(char);
     const normalized = char.normalize("NFKD");
-    const operands: any = normalized.split("⁄");
+    const operands: any = normalized.split("⁄"); // this is not a normal slash
     if (operands[0] / operands[1]) {
       console.log(char, operands[0] + "/" + operands[1], operands[0] / operands[1]);
       dec = operands[0] / operands[1];
@@ -201,4 +214,47 @@ function validateNumber(str: string): number {
     }
   }
   return num;
+}
+
+function sanitizeFloat(num: number) {
+  // takes a float and returns a string that fits with jungle jim's recipe guidelines
+
+  const fractions = {
+    '0.50': '½',
+    '0.33': '⅓',
+    '0.67': '⅔',
+    '0.25': '¼',
+    '0.75': '¾',
+    '0.20': '⅕',
+    '0.40': '⅖',
+    '0.60': '⅗',
+    '0.80': '⅘',
+    '0.17': '⅙',
+    '0.83': '⅚',
+    '0.14': '⅐',
+    '0.13': '⅛',
+    '0.38': '⅜',
+    '0.63': '⅝',
+    '0.88': '⅞',
+    '0.11': '⅑',
+    '0.10': '⅒'
+  };
+
+  let decimal: number = (num % 1);
+  let int: number = num - decimal;
+  //console.log(num, dec, "dec")
+  //console.log(math.fraction(parseFloat(dec)), "evaluate fraction dec")
+  let fraction = math.fraction(decimal);
+
+
+  /* if ((decimal).toFixed(2) in fractions) {
+    return fractions[(decimal).toFixed(2)];
+  } else if (decimal != 0) {
+    return <><sup style={{fontSize: '10px'}}>{`${fraction.n}`}</sup>/<sub style={{fontSize: '10px'}}>{`${fraction.d}`}</sub></>
+  } */
+
+  return <>
+    {int > 0 ? int : undefined}
+    {fraction.n != 0 ? <><sup style={{ fontSize: '10px' }}> {`${fraction.n}`}</sup>/<sub style={{ fontSize: '10px' }}>{`${fraction.d}`}</sub></> : undefined}
+  </>
 }
