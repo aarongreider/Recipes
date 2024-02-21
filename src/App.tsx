@@ -88,13 +88,9 @@ function App() {
 
             const dateString = response["Timestamp"];
             const timestamp = Date.parse(dateString);
-
             if (!isNaN(timestamp)) {
               const dateObject = new Date(timestamp);
-              console.log(dateObject);
               setTimestamp(dateObject)
-            } else {
-              console.log("Invalid date string");
             }
 
             setDataLoaded(true)
@@ -109,6 +105,10 @@ function App() {
       }
     }
   }, [entryID])
+
+  useEffect(() => {
+    console.log(servingsInput)
+  }, [servingsInput])
 
   useEffect(() => {
     console.log(ingredients as Ingredient[], ingredients ? typeof ingredients[0] : '')
@@ -142,7 +142,7 @@ function App() {
                 To submit your own, navigate to our <a target='blank' href='https://junglejims.com/recipe-submission/'>recipe submission form!</a>
               </h5>
               <h1 style={{ textAlign: 'left' }}>{title}</h1>
-              <h4 style={{ margin: '10px 0', fontWeight: '400' }}>
+              <h4 style={{ margin: '6px 0', fontWeight: '400', fontSize:'16px' }}>
                 Submitted by <span style={{ fontWeight: '900' }}>{name ? name : 'anonymous'}</span> {timestamp ? `on ${timestamp.toLocaleDateString('en-US', {
                   year: 'numeric', month: 'long', day: 'numeric'
                 })}` : undefined}</h4>
@@ -220,12 +220,12 @@ function getQuantity(str: string, multiplier: number): any {
   if (str) {
     if (isNaN(parseFloat(str))) {
       if (evaluateUnicodeFraction(str) == -1) {
-        console.log(str)
+        //console.log(str)
         return str;
       }
     }
   } else {
-    console.log(0)
+    //console.log(0)
     return '0';
   }
   //console.log(sanitizeFloat(unicodeToFloat(`${str}`) * multiplier))
