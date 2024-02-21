@@ -35,6 +35,7 @@ function App() {
   const [photos, setPhotos] = useState<string[]>()
   const [multiplier, setMultiplier] = useState<number>(1)
   const [name, setName] = useState<string>()
+  const [timestamp, setTimestamp] = useState<Date>()
 
   const [dataLoaded, setDataLoaded] = useState<boolean>(false)
 
@@ -42,7 +43,7 @@ function App() {
     let scriptTag = document.getElementById("injector");
     let id = scriptTag?.getAttribute("entryid");
     setEntryID(id ? parseInt(id) : 20412) // 20412 19517
-    console.log('version 0.7')
+    console.log('version 0.8')
   }, [])
 
   useEffect(() => {
@@ -62,6 +63,8 @@ function App() {
             response = response.data[`${entryID}`]
             //setResponse(response)
             setTitle(response["Dish Title"])
+            setName(response["Submitter Name"])
+
 
             setReason(response["What makes your recipe special to you?"])
             setPrepTime(response["Prep time"])
@@ -82,6 +85,17 @@ function App() {
               }
             });
             setIngredients(parsedIngredients)
+
+            const dateString = response["Timestamp"];
+            const timestamp = Date.parse(dateString);
+
+            if (!isNaN(timestamp)) {
+              const dateObject = new Date(timestamp);
+              console.log(dateObject);
+              setTimestamp(dateObject)
+            } else {
+              console.log("Invalid date string");
+            }
 
             setDataLoaded(true)
           })
@@ -128,6 +142,10 @@ function App() {
                 To submit your own, navigate to our <a target='blank' href='https://junglejims.com/recipe-submission/'>recipe submission form!</a>
               </h5>
               <h1 style={{ textAlign: 'left' }}>{title}</h1>
+              <h4 style={{ margin: '10px 0', fontWeight: '400' }}>
+                Submitted by <span style={{ fontWeight: '900' }}>{name ? name : 'anonymous'}</span> {timestamp ? `on ${timestamp.toLocaleDateString('en-US', {
+                  year: 'numeric', month: 'long', day: 'numeric'
+                })}` : undefined}</h4>
               <h3 style={{ textAlign: 'left', fontSize: '18px' }}>{reason}</h3>
               <div style={{
                 width: 'max-content', margin: '16px 0', display: 'flex', alignItems: "center", gap: "24px", fontWeight: 'bold', borderRadius: '12px', padding: '12px',
@@ -188,7 +206,7 @@ function App() {
 export default App;
 
 function getQuantity(str: string, multiplier: number): any {
-  
+
   /* 
     str ? // does the quantity property exist?
     isNaN(parseFloat(str)) ? // is it parsing as a float?
@@ -202,8 +220,8 @@ function getQuantity(str: string, multiplier: number): any {
   if (str) {
     if (isNaN(parseFloat(str))) {
       if (evaluateUnicodeFraction(str) == -1) {
-          console.log(str)
-         return str;
+        console.log(str)
+        return str;
       }
     }
   } else {
@@ -266,13 +284,13 @@ function sanitizeFloat(num: number) {
   //console.log(num, dec, "dec")
   //console.log(math.fraction(parseFloat(dec)), "evaluate fraction dec")
   let fraction = math.fraction(decimal);
-  if (int != 0  || fraction.n != 0) {
+  if (int != 0 || fraction.n != 0) {
     return <>
-    {int > 0 ? int : undefined}
-    {fraction.n != 0 ? <><sup style={{ fontSize: '10px' }}> {`${fraction.n}`}</sup>/<sub style={{ fontSize: '10px' }}>{`${fraction.d}`}</sub></> : undefined}
-  </>
+      {int > 0 ? int : undefined}
+      {fraction.n != 0 ? <><sup style={{ fontSize: '10px' }}> {`${fraction.n}`}</sup>/<sub style={{ fontSize: '10px' }}>{`${fraction.d}`}</sub></> : undefined}
+    </>
   } else {
     return 0
   }
-  
+
 }
