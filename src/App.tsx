@@ -132,9 +132,9 @@ function App() {
     window.addEventListener('resize', handleResize);
   }, [])
 
-/*   useEffect(() => {
+  useEffect(() => {
     console.log(viewportWidth)
-  }, [viewportWidth]) */
+  }, [viewportWidth])
 
   return (
     dataLoaded ?
