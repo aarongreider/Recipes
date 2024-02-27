@@ -136,7 +136,7 @@ function App() {
     dataLoaded ?
       <>
         <div style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'row', background: 'none', border: 'none', gap: '90px' }}>
-          <div className="card" style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', background: 'none', border: 'none', gap: '30px', maxWidth: "525px" }}>
+          <div className="card" style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', background: 'none', border: 'none', gap: '30px', /* maxWidth: "525px" */ }}>
             <div style={{ width: '100%' }}>
               <h5 style={{ fontWeight: 'normal', textAlign: 'left', fontSize: '14px', margin: '0 0 36px 0px' }}>
                 This is user submitted content that has been approved by our culinary staff.
