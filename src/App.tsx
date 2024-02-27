@@ -43,12 +43,12 @@ function App() {
     let scriptTag = document.getElementById("injector");
     let id = scriptTag?.getAttribute("entryid");
     setEntryID(id ? parseInt(id) : 20412) // 20412 19517
-    console.log('version 0.8')
+    console.log('version 0.9')
   }, [])
 
   useEffect(() => {
-    console.log(entryID)
     if (entryID) {
+      console.log(entryID)
       try {
         fetch('https://script.google.com/macros/s/AKfycbzEOc3b1une7RNqBHA1VXFuRKiWt3SUnmJ6-UsusElFm50PbSIGlsTkNxt06QJaGI6L/exec')
           .then(response => {
@@ -106,13 +106,13 @@ function App() {
     }
   }, [entryID])
 
-  useEffect(() => {
+/*   useEffect(() => {
     console.log(servingsInput)
-  }, [servingsInput])
+  }, [servingsInput]) */
 
-  useEffect(() => {
+/*   useEffect(() => {
     console.log(ingredients as Ingredient[], ingredients ? typeof ingredients[0] : '')
-  }, [ingredients])
+  }, [ingredients]) */
 
   const handleServingsChange = (event: any) => {
     console.log(event.target.value)
@@ -133,7 +133,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    console.log(viewportWidth)
+    console.log('viewport width:', viewportWidth)
   }, [viewportWidth])
 
   return (
