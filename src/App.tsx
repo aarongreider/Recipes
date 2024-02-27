@@ -136,26 +136,26 @@ function App() {
     dataLoaded ?
       <>
         <div style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'row', background: 'none', border: 'none', gap: '90px' }}>
-          <div className="card" style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', background: 'none', border: 'none', gap: '30px' }}>
-            <div>
+          <div className="card" style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', background: 'none', border: 'none', gap: '30px', maxWidth: "525px" }}>
+            <div style={{ width: '100%' }}>
               <h5 style={{ fontWeight: 'normal', textAlign: 'left', fontSize: '14px', margin: '0 0 36px 0px' }}>
                 This is user submitted content that has been approved by our culinary staff.
                 To submit your own, navigate to our <a target='blank' href='https://junglejims.com/recipe-submission/'>recipe submission form!</a>
               </h5>
               <h1 style={{ textAlign: 'left' }}>{title}</h1>
-              <h4 style={{ margin: '6px 0', fontWeight: '400', fontSize:'16px' }}>
+              <h4 style={{ margin: '6px 0', fontWeight: '400', fontSize: '16px' }}>
                 Submitted by <span style={{ fontWeight: '900' }}>{name ? name : 'anonymous'}</span> {timestamp ? `on ${timestamp.toLocaleDateString('en-US', {
                   year: 'numeric', month: 'long', day: 'numeric'
                 })}` : undefined}</h4>
               <h3 style={{ textAlign: 'left', fontSize: '18px' }}>{reason}</h3>
-              <div style={{
+              {(!prepTime && !cookTime) ? undefined : <div style={{
                 width: 'max-content', margin: '16px 0', display: 'flex', alignItems: "center", gap: "24px", fontWeight: 'bold', borderRadius: '12px', padding: '12px',
                 background: 'linear-gradient(to bottom, #f3de54 0%, #e2b733 100%)', font: '900 16px / 1.20 Alegreya Sans, Arial, Helvetica, sans-serif',
                 color: '#30553a', boxShadow: ' 4px 4px 2px 0 rgba(77, 77, 77, .22)',
               }}>
-                <p style={{ margin: '0' }}>Prep Time: {prepTime} min.</p>
-                <p style={{ margin: '0' }}>Cook Time: {cookTime} min.</p>
-              </div>
+                {prepTime ? <p style={{ margin: '0' }}>Prep Time: {prepTime} min.</p> : undefined}
+                {cookTime ? <p style={{ margin: '0' }}>Cook Time: {cookTime} min.</p> : undefined}
+              </div>}
 
             </div>
             {photos && viewportWidth < 1250 ? <Carousel images={photos}></Carousel> : ''}
